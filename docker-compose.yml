@@ -4,12 +4,14 @@ networks:
   webapp:
 services:
   frontend:
+    container_name: frontend
     build: ./frontend
     ports:
       - 80:3000
     networks:
       - webapp
   backend:
+    container_name: backend
     build: ./backend
     ports:
       - 5000:4000
