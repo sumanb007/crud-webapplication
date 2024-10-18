@@ -8,7 +8,7 @@ const [students, setStudents] = useState([]);
 
 useEffect(() => {
 	axios
-	.get("http://103.235.197.196:5000/students/")
+	.get("http://192.168.0.11:5000/students/")
 	.then(({ data }) => {
 		setStudents(data);
 	})

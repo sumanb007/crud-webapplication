@@ -10,18 +10,19 @@ const CreateStudent = () => {
 const [formValues, setFormValues] =
 	useState({ name: '', email: '', rollno: '' })
 // onSubmit handler
-const onSubmit = studentObject => {
-	axios.post(
-'http://103.235.197.196:5000/students/create-student',
-	studentObject)
-	.then(res => {
-		if (res.status === 200)
-		alert('Student successfully created')
-		else
-		Promise.reject()
-	})
-	.catch(err => alert('Something went wrong'))
-}
+const onSubmit = (studentObject, { resetForm, setSubmitting }) => {
+        axios.post('http://192.168.0.11:5000/students/create-student', studentObject)
+            .then(res => {
+                if (res.status === 200) {
+                    alert('Student successfully created');
+                    resetForm(); // Reset form fields to initial state
+                } else {
+                    return Promise.reject();
+                }
+            })
+            .catch(err => alert('Something went wrong'))
+            .finally(() => setSubmitting(false)); // Ensure Formik submission ends
+    };
 	
 // Return student form
 return(

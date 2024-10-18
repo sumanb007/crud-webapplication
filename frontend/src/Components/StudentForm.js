@@ -1,61 +1,87 @@
-// Source code from = https://www.geeksforgeeks.org/how-to-build-a-basic-crud-app-with-node-js-and-reactjs/
+// src/Components/StudentForm.js
 
 import React from "react";
 import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { FormGroup, FormControl, Button } from "react-bootstrap";
+import {
+    Formik, Form,
+    Field, ErrorMessage
+} from "formik";
+import {
+    FormGroup,
+    FormControl, Button, FormLabel
+} from "react-bootstrap";
 
 const StudentForm = (props) => {
-const validationSchema = Yup.object().shape({
-	name: Yup.string().required("Required"),
-	email: Yup.string()
-	.email("You have enter an invalid email address")
-	.required("Required"),
-	rollno: Yup.number()
-	.positive("Invalid roll number")
-	.integer("Invalid roll number")
-	.required("Required"),
-});
-console.log(props);
-return (
-	<div className="form-wrapper">
-	<Formik {...props} validationSchema={validationSchema}>
-		<Form>
-		<FormGroup>
-			<Field name="name" type="text"
-				className="form-control" />
-			<ErrorMessage
-			name="name"
-			className="d-block invalid-feedback"
-			component="span"
-			/>
-		</FormGroup>
-		<FormGroup>
-			<Field name="email" type="text"
-				className="form-control" />
-			<ErrorMessage
-			name="email"
-			className="d-block invalid-feedback"
-			component="span"
-			/>
-		</FormGroup>
-		<FormGroup>
-			<Field name="rollno" type="number"
-				className="form-control" />
-			<ErrorMessage
-			name="rollno"
-			className="d-block invalid-feedback"
-			component="span"
-			/>
-		</FormGroup>
-		<Button variant="danger" size="lg"
-			block="block" type="submit">
-			{props.children}
-		</Button>
-		</Form>
-	</Formik>
-	</div>
-);
+    const validationSchema = Yup.object().shape({
+        name: Yup.string().required("Required"),
+        email: Yup.string()
+            .email("You have entered an invalid email address")
+            .required("Required"),
+        rollno: Yup.number()
+            .positive("Invalid roll number")
+            .integer("Invalid roll number")
+            .required("Required"),
+    });
+
+    return (
+        <div className="form-wrapper">
+            <Formik {...props} validationSchema={validationSchema}>
+                <Form>
+                    <FormGroup className="mb-3">
+                        <FormLabel htmlFor="name">Name</FormLabel>
+                        <Field
+                            name="name"
+                            type="text"
+                            id="name"
+                            placeholder="Enter your full name"
+                            className="form-control"
+                        />
+                        <ErrorMessage
+                            name="name"
+                            component="span"
+                            className="text-danger"
+                        />
+                    </FormGroup>
+
+                    <FormGroup className="mb-3">
+                        <FormLabel htmlFor="email">Email</FormLabel>
+                        <Field
+                            name="email"
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email"
+                            className="form-control"
+                        />
+                        <ErrorMessage
+                            name="email"
+                            component="span"
+                            className="text-danger"
+                        />
+                    </FormGroup>
+
+                    <FormGroup className="mb-3">
+                        <FormLabel htmlFor="rollno">Roll Number</FormLabel>
+                        <Field
+                            name="rollno"
+                            type="number"
+                            id="rollno"
+                            placeholder="Enter your class roll number"
+                            className="form-control"
+                        />
+                        <ErrorMessage
+                            name="rollno"
+                            component="span"
+                            className="text-danger"
+                        />
+                    </FormGroup>
+
+                    <Button variant="danger" size="lg" block="block" type="submit">
+                        {props.children}
+                    </Button>
+                </Form>
+            </Formik>
+        </div>
+    );
 };
 
 export default StudentForm;
