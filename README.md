@@ -70,7 +70,7 @@ Led the containerization, code optimization, and repository management processes
    4.2 [Improving Backend Queries](#42-improving-backend-queries)  
 
 5. [Orchestrating with Kubernetes](#5-orchestrating-with-kubernetes)  
-6. [Future Improvements](#future-improvements)  
+6. [Future Improvements](#6-future-improvements)  
 
 ---
 
@@ -861,11 +861,8 @@ ii. Optmized in backend/routes/student.route.js
 ## 5. Orchestrating with Kubernetes 
 Saved in [another GitHub repository](https://github.com/sumanb007/kubernetes/tree/master/sample-project).
 
-## Outcome and Lessons Learned  
-Summary of achievements and skills gained from the project.
-
 ---
 
-## Future Improvements  
+## 6. Future Improvements  
 - Integrating CI/CD pipelines for automated deployment.  
 - Exploring Nginx as a reverse proxy for performance optimization.
