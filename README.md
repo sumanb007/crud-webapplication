@@ -607,14 +607,14 @@ i. Logging to docker registry
 
 ii. Tagging images
    ```bash
-   docker tag crud-webapplication-frontend:latest bsumanji/frontend-crud-webapp
-   docker tag crud-webapplication-backend:latest bsumanji/backend-crud-webapp
+   docker tag crud-webapplication-frontend:latest bsumanji/frontend-crud-webappp
+   docker tag crud-webapplication-backend:latest bsumanji/backend-crud-webappp
    ```
 
 iii. Pushing images
    ```bash
-   docker push bsumanji/frontend-crud-webapp
-   docker push bsumanji/backend-crud-webapp
+   docker push bsumanji/frontend-crud-webappp
+   docker push bsumanji/backend-crud-webappp
    ```
 <img width="722" alt="pushingImages" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/pushingImages.png">
 
