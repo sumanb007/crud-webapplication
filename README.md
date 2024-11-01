@@ -2,7 +2,8 @@
 
 # DevOps Sample Project  
 ### Containerizing MERN Stack [Application](https://www.geeksforgeeks.org/how-to-build-a-basic-crud-app-with-node-js-and-reactjs/) 
-<img width="1781" alt="image" src="https://github.com/user-attachments/assets/fb67c2ea-558b-427e-937d-025fdfe91028">
+<img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/webpage.png" alt="Webpage Image"/>
+
 
 </div>
 
@@ -69,10 +70,7 @@ Led the containerization, code optimization, and repository management processes
    4.2 [Improving Backend Queries](#42-improving-backend-queries)  
 
 5. [Orchestrating with Kubernetes](#5-orchestrating-with-kubernetes)  
-6. [Version Control and Collaboration](#version-control-and-collaboration) 
-7. [Challenges and Resolutions](#challenges-and-resolutions)  
-8. [Outcome and Lessons Learned](#outcome-and-lessons-learned)  
-9. [Future Improvements](#future-improvements)  
+6. [Future Improvements](#future-improvements)  
 
 ---
 
@@ -80,23 +78,22 @@ Led the containerization, code optimization, and repository management processes
 
 ## 1.1. Creating Ubuntu VM in VirtualBox  
 This includes creating an Ubuntu VM on top of the Ubuntu host.  
-
-![hostmachine](https://github.com/user-attachments/assets/696a0a77-0c47-43cf-8c4c-54463879d369)  
-![vmdetail1](https://github.com/user-attachments/assets/0efe334f-9a5c-4273-9d74-0f1aa306fe82)
-
+<img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/hostmachine.png" alt="Hostnamchine Image" width="500"/>
+<img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/vmdetail1.png" alt="vmdetail Image" width="500"/>
 
 i. Create a VM with at least:  
    - 2G Memory  
    - 2 Processors  
    - 30G Disk size  
    - Bridge the VM network to your router network for better reachability.
-     ![vmdetail2](https://github.com/user-attachments/assets/e71ce478-27db-4b3c-999e-0a31cf2e4d39)
-
-     ![vm](https://github.com/user-attachments/assets/155d426c-e60a-44c1-aeec-d4557cb668e1)
+     
+     <img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/vmdetail2.png" alt="vmdetail2 Image" width="250"/>
+     <img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/vm.png" alt="vm Image" width="600"/>
 
 
 ii. Configure IP manually for VM
-    ![vmIP](https://github.com/user-attachments/assets/01e2c849-114a-4724-85b2-bd21a295b819)
+<img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/vmIP.png" alt="vmIP Image" width="800"/>
+
 
 ## 1.2. Installing Node.js, NVM, and Docker  
 
@@ -180,15 +177,15 @@ i. Create a directory named 'crud-webapplication'. Then in the directory, create
    cd crud-webapplication/
    npx create-react-app frontend
    ```
-   <img width="652" alt="frontendcreate" src="https://github.com/user-attachments/assets/0c8eb564-0d8e-4e27-912d-3c7f3466d611">
+   <img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/frontendcreate.png" alt="vmIP Image" width="600"/>
 
 
 ii. Now as suggested in the Approach section of the frontend part from the [link](https://www.geeksforgeeks.org/how-to-build-a-basic-crud-app-with-node-js-and-reactjs/), create and copy those codes.
 
 
-   <img width="1050" alt="frontApproach" src="https://github.com/user-attachments/assets/72dcb48e-1a91-4c12-9634-92ced69492ef">
+   <img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/frontApproach.png" alt="Frontend Approach Image" width="600" />
    <br>
-   <img width="883" alt="frontendCopy" src="https://github.com/user-attachments/assets/3d8307f5-c2aa-4eb4-8a50-33f502a05f57">
+   <img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/frontendCopy.png" alt="Frontend Copy Image" width="600"/>
    <br>
    
    Below is what we see in 'frontend' and 'src' directories.
@@ -228,10 +225,9 @@ i. In the directory 'crud-webapplication', create directory 'backend'. Then, add
    ```
 
 ii. Now as suggested in the Approach section of the backend part from the [link](https://www.geeksforgeeks.org/how-to-build-a-basic-crud-app-with-node-js-and-reactjs/), create and copy those codes.
+<img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/backApproach.png" alt="Backend Approach Image" width="600"/>
 
-<img width="1034" alt="backApproach" src="https://github.com/user-attachments/assets/2ffa56a2-65e8-4678-be7d-ee289ede3c53">
-
-<img width="728" alt="backendCopy" src="https://github.com/user-attachments/assets/477de6cb-748e-4508-8a14-2366bdb3bb47">
+<img width="500" alt="backendCopy" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/backendCopy.png">
 
 Below is what we see in 'backend' directory
 
@@ -254,7 +250,7 @@ i. In the frontend directory install react-bootstrap@next, bootstrap@5.1.0, reac
    ```bash
    npm i react-bootstrap@next bootstrap@5.1.0 react-router-dom axios formik yup
    ```
-<img width="905" alt="front-dependencies" src="https://github.com/user-attachments/assets/f8414faa-1337-4006-a254-818efa97ee34">
+<img width="905" alt="front-dependencies" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/front-dependencies.png">
 
 ii. Check the installed frontend dependencies in package.json
    ```json
@@ -310,8 +306,8 @@ iii. Now, in the backend directory initialize npm and install express, body-pars
    npm init -y
    npm install express body-parser cors mongoose nodemon dotenv
    ```
-<img width="455" alt="back-dependencies1" src="https://github.com/user-attachments/assets/ddde5e34-9d76-46f5-b986-bc1e39ab60df">
-<img width="778" alt="back-dependencies2" src="https://github.com/user-attachments/assets/d0021d4a-7755-47fe-ab40-a0c848f2deb4">
+<img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/back-dependency1.png" alt="Backend Dependency" width="500"/>
+<img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/back-dependency2.png" alt="Backend Dependency" width="700"/>
 
 
 iv. Check the installed backend dependencies in package.json
@@ -349,15 +345,15 @@ i. Create network named 'webapp'. We are using this network to run our frontend,
    ```bash
    docker network create webapp
    ```
-<img width="486" alt="dockerNetwork" src="https://github.com/user-attachments/assets/14bd7be6-4917-42c0-aa26-dacaa4bf4b8c">
+   <img width="486" alt="dockerNetwork" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/dockerNetwork.png">
 
-> [!IMPORTANT]
-> By defining a custom network (webapp), the services (frontend, backend, and mongodb) are isolated from other containers on your host.
+   > [!IMPORTANT]
+   > By defining a custom network (webapp), the services (frontend, backend, and mongodb) are isolated from other containers on your host.
 
-This automatically provides internal DNS resolution within the defined network.
-
-Reference:
-From backend/database/db.js
+   This automatically provides internal DNS resolution within the defined network.
+   
+   Reference:
+   From backend/database/db.js
    ```javascript
    module.exports = {
      db: 'mongodb://web-mongodb:27017/reactdb'
@@ -371,13 +367,14 @@ ii. Next, we are binding port 80 on the host machine to port 3000 on the contain
 
    We bind using flag, "-p 80:3000" connecting conainer to "--network webapp"
 
-iii Similarly for backend to connect with frontend, we are binding port 5000 on the host machine to port 4000 on container.
-This is because we have configured frontend to connect with port 5000 on backend.
-And backend server.js listens at port 4000.
-<img width="836" alt="endpoints" src="https://github.com/user-attachments/assets/7489b6ff-7962-4a25-b8ec-e561c9f6f441">
 
-
+iii. Similarly for backend to connect with frontend, we are binding port 5000 on the host machine to port 4000 on container.
+      This is because we have configured frontend to connect with port 5000 on backend.
+      And backend server.js listens at port 4000.
+      <img width="836" alt="endpoints" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/endpoints.png">
+      
    ```javascript
+      
    //backend.server.js
    
    // PORT
@@ -531,10 +528,10 @@ iv. Now, build backed container
 
 Here's the docker images.
 
-<img width="488" alt="dockerImages" src="https://github.com/user-attachments/assets/7af1dc8a-b4a2-4a5a-a619-4af325c47f4c">
+<img width="488" alt="dockerImages" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/dockerImages.png">
 
 See the logs below when you make changes in application database.
-<img width="1364" alt="dbLogs" src="https://github.com/user-attachments/assets/3b160302-c774-4032-b991-42c16a23871f">
+<img width="1364" alt="dbLogs" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/dbLogs.png">
 
 You may refer below to [3.2.](#32-verifying-application) for activity done from browser.
 
@@ -581,24 +578,24 @@ v. Now lets test to run containers from docker-compose file.
 ## 3.2. Verifying Application
 
 i. Since the application reachability is forwarded to Router's Network. We are browsing application at IP: 192.168.0.11:80
-<img width="1364" alt="browsingApp" src="https://github.com/user-attachments/assets/fc8b318a-0964-40ec-ac5f-fbcab0d66a53">
+<img width="1364" alt="browsingApp" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/browsingApp.png">
 
 ii. Create student info by filling form.
-<img width="1311" alt="createStudent" src="https://github.com/user-attachments/assets/92f0a52d-d181-4256-9227-7d367f9a18b6">
+<img width="1311" alt="createStudent" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/createStudent.png">
 
-<img width="1324" alt="createStudent2" src="https://github.com/user-attachments/assets/f068c3e3-4e2f-4a23-a39d-5d794a6feee5">
+<img width="1324" alt="createStudent2" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/createStudent2.png">
 
 iii. Read the student list.
-<img width="1324" alt="readStudent1" src="https://github.com/user-attachments/assets/b011bbf0-cde0-449f-82fe-c10727d9f75c">
+<img width="1324" alt="readStudent1" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/readStudent1.png">
 
 iv. Update the student info.
-<img width="1324" alt="updateStudent" src="https://github.com/user-attachments/assets/2400855a-e6a7-4b19-947a-ba370caf435e">
+<img width="1324" alt="updateStudent" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/updateStudent.png">
 
 v. Delete student info.
-<img width="1297" alt="deleteStudent" src="https://github.com/user-attachments/assets/1fb748d0-1881-4917-8dfd-5f4cf8e02f1e">
+<img width="1297" alt="deleteStudent" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/deleteStudent.png">
 
 vi. Read the list again.
-<img width="1326" alt="readStudent2" src="https://github.com/user-attachments/assets/77ea2b66-7408-4963-9c91-bbe5e5d59c63">
+<img width="1326" alt="readStudent2" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/readStudent2.png">
 
 
 ## 3.3. Publishing Image to Docker Hub
@@ -619,7 +616,7 @@ iii. Pushing images
    docker push bsumanji/frontend-crud-webapp
    docker push bsumanji/backend-crud-webapp
    ```
-<img width="722" alt="pushingImages" src="https://github.com/user-attachments/assets/53305357-645c-4d15-8849-78e3a01d56e9">
+<img width="722" alt="pushingImages" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/pushingImages.png">
 
 
 
@@ -634,7 +631,7 @@ The actual javascript codes were written during older versions of some dependenc
 i. Optimizing frontend/src/App.js
 
    Error that occurred in provided code:
-   <img width="1303" alt="appjsIssue" src="https://github.com/user-attachments/assets/2525adc1-1330-44fe-a500-c65030281de4">
+   <img width="1303" alt="appjsIssue" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/appjsIssue.png">
    
    Provided Code:
    ```javascript
@@ -712,7 +709,7 @@ ii. Optimizing frontend/src/Components/StudentForm.js
      ```
      
 iii. URL Endpoint 'localhost:4000' Changed to '192.168.0.11:5000'  in the StudentTableRow.js, create-student.component.js, edit-student.component.js, student-list.component.js
-      <img width="836" alt="endpoints" src="https://github.com/user-attachments/assets/dc76bdca-d9fc-4ed3-8dcc-afce97b804d5">
+      <img width="836" alt="endpoints" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/endpoints.png">
 
 
 iv. Optimizing frontend/src/Components/create-student.component.js
@@ -734,7 +731,7 @@ v. Optimizing frontend/src/Components/edit-student.component.js
 
    Error that occurred in provided code:
    
-   <img width="495" alt="editIssue" src="https://github.com/user-attachments/assets/5b430141-2a42-4b82-9a23-5edfce535c5f">
+   <img width="495" alt="editIssue" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/editIssue.png">
 
    The error that is encountering (undefined is not an object (evaluating 'props.match.params')) usually occurs when the match object or its params are unavailable in the component.     This happens because React Router version 6 and later changed how route parameters are accessed.
 
@@ -801,7 +798,7 @@ i. Optimized in backend/routes/server.js
 
      Issue in connection with mongodb
      
-     <img width="876" alt="mongooseConnect" src="https://github.com/user-attachments/assets/7851a34b-96a9-4550-9903-fa57bce700d0">
+     <img width="876" alt="mongooseConnect" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/mongooseConnect.png">
       
       Recommend Solution
       ```javascript
@@ -861,21 +858,8 @@ ii. Optmized in backend/routes/student.route.js
 
 ---
 
-## 5. Orchestrating with Kubernetes
-Kubernetes deployment steps with YAML configurations.  
+## 5. Orchestrating with Kubernetes 
 Saved in [another GitHub repository](https://github.com/sumanb007/kubernetes/tree/master/sample-project).
-
----
-
-## Version Control and Collaboration  
-Managing code and configurations through GitHub with proper documentation.
-
----
-
-## Challenges and Resolutions  
-Issues faced during container networking and their resolutions.
-
----
 
 ## Outcome and Lessons Learned  
 Summary of achievements and skills gained from the project.
