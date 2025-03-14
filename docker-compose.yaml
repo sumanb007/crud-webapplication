@@ -1,0 +1,65 @@
+version: "3.9"
+
+networks:
+  webapp:
+    name: webapp
+    driver: bridge
+
+services:
+  # Frontend Service (React)
+  frontend:
+    image: 192.168.1.110:5050/frontend-crud-webapp:v2
+    container_name: frontend
+    hostname: frontend
+    networks:
+      - webapp
+    # Commenting below line to let NGINX handle traffic
+    # ports: "80:3000" 
+
+  # Backend Service (Node Express Js)
+  backend:
+    image: 192.168.1.110:5050/backend-crud-webapp:v1
+    container_name: backend
+    hostname: backend
+    
+    # commenting below line to let backend work in its port 4000
+    # ports: "5000:4000"  # Expose backend on host port 5000
+
+    networks:
+      - webapp
+    depends_on:
+      - web-mongodb
+
+  # MongoDB Service
+  web-mongodb:
+    image: mongo:4.0-rc-xenial
+    container_name: web-mongodb
+    hostname: web-mongodb
+    volumes:
+      - mongodb_data:/data/db    #Maps to NFS
+    networks:
+      - webapp
+
+  # NGINX Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    hostname: nginx-proxy
+    networks:
+      - webapp
+    ports:
+      - "0.0.0.0:80:80"  # External access point
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  mongodb_data:
+    name: mongodb_data
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.110,rw,soft,timeo=30
+      device: ":/mnt/sdb2-partition/mongo-NFS-server"  # NFS server path
