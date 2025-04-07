@@ -4,6 +4,9 @@
 ### Containerizing MERN Stack [Application](https://www.geeksforgeeks.org/how-to-build-a-basic-crud-app-with-node-js-and-reactjs/) 
 <img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/webpage.png" alt="Webpage Image"/>
 
+###Project Architecture
+<img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/projectDiagram.png" alt="Webpage Image"/>
+
 
 </div>
 
