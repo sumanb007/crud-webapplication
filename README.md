@@ -3,11 +3,6 @@
 # DevOps Sample Project  
 ### Containerizing MERN Stack [Application](https://www.geeksforgeeks.org/how-to-build-a-basic-crud-app-with-node-js-and-reactjs/) 
 <img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/webpage.png" alt="Webpage Image"/>
-
-###Project Architecture
-<img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/projectDiagram.png" alt="Webpage Image"/>
-
-
 </div>
 
 ---
@@ -17,6 +12,10 @@
 This project involves containerizing a CRUD-based MERN stack application to demonstrate containerization using Docker. The focus is on decoupling the full-stack architecture into isolated containers, optimizing the code for better performance, and managing version control effectively using GitHub.  
 
 The application provides a seamless user experience for creating, reading, updating, and deleting (CRUD) operations, supported by React for the frontend, Node.js with Express for the backend, and MongoDB for database management.
+
+### Project Architecture
+<img src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/projectDiagram.png" alt="projectDiagram Image" width="800"/>
+
 
 ---
 ### **Objective:** 
