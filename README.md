@@ -53,26 +53,27 @@ Led the containerization, code optimization, and repository management processes
    1.1 [Creating Ubuntu VM in VirtualBox](#11-creating-ubuntu-vm-in-virtualbox)  
    1.2 [Installing Node.js, NVM, and Docker](#12-installing-nodejs-nvm-and-docker)  
    1.3 [Setting Up Project Directory Structure](#13-setting-up-project-directory-structure)  
-   &nbsp;&nbsp;&nbsp; 1.3.1 [Setting Up Frontend](#131-setting-up-frontend)  
-   &nbsp;&nbsp;&nbsp; 1.3.2 [Setting Up Backend](#132-setting-up-backend)  
-   1.4 [Installing Project Dependencies](#14-installing-project-dependencies)  
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3.1 [Setting Frontend](#131-setting-frontend)  
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3.2 [Setting Backend](#132-setting-backend)  
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3.3 [Setting Nginx Reverse Proxy](#133-setting-nginx-reverse-proxy)  
+   1.4 [Installing Project Dependencies](#14-installing-project-dependencies)
 
-2. [Dockerizing the Application](#2-dockerizing-the-application)  
+3. [Dockerizing the Application](#2-dockerizing-the-application)  
    2.1 [Configuring Docker Network](#21-configuring-docker-network)  
    2.2 [Creating Dockerfiles](#22-creating-dockerfiles)  
    2.3 [Setting up Docker Compose](#23-setting-up-docker-compose)  
 
-3. [Building and Running Containers](#3-building-and-running-containers)  
+4. [Building and Running Containers](#3-building-and-running-containers)  
    3.1 [Running Containers](#31-running-containers)  
    3.2 [Verifying Application](#32-verifying-application)  
    3.3 [Publishing Image to Docker Hub](#33-publishing-image-to-docker-hub)  
 
-4. [Code Optimization](#4-code-optimization)  
+5. [Code Optimization](#4-code-optimization)  
    4.1 [Improving Frontend Queries](#41-improving-frontend-queries)  
    4.2 [Improving Backend Queries](#42-improving-backend-queries)  
 
-5. [Orchestrating with Kubernetes](#5-orchestrating-with-kubernetes)  
-6. [Future Improvements](#6-future-improvements)  
+6. [Orchestrating with Kubernetes](#5-orchestrating-with-kubernetes)  
+7. [Future Improvements](#6-future-improvements)  
 
 ---
 
@@ -171,7 +172,7 @@ vi. Now for docker, follow the official [link](https://docs.docker.com/engine/in
 
 ## 1.3. Setting Up Project Directory Structure
 
-### 1.3.1. Setting Up Frontend
+### 1.3.1. Setting Frontend
 
 i. Create a directory named 'crud-webapplication'. Then in the directory, create react app named 'frontend'.
    ```bash
@@ -217,7 +218,7 @@ ii. Now as suggested in the Approach section of the frontend part from the [link
    ```
 
 
-### 1.3.2. Setting Up Backend
+### 1.3.2. Setting Backend
 
 i. In the directory 'crud-webapplication', create directory 'backend'. Then, add more directories 'database', 'models' and 'routes' inside 'backend'.
    ```bash
@@ -244,6 +245,37 @@ Below is what we see in 'backend' directory
       └── server.js
       
    ```
+### 1.3.3. Setting Nginx Reverse Proxy
+
+Overall Purpose
+This config sets up NGINX as a reverse proxy to:
+
+- Route traffic to a frontend app (running on port 8080)
+- Route traffic to a backend app (handling /students, on port 4000).
+
+Create a file 'nginx.conf' inside project directory 
+
+```bash
+vim crud-webapplication/nginx.conf
+```
+
+and write below configuraiton.
+```nginx
+events {}
+http {
+  server {
+    listen 80;
+    server_name _;  # Allow all incoming requests
+    # Rest of the configuration remains the same
+    location / {
+      proxy_pass http://frontend:8080;
+    }
+    location /students {
+      proxy_pass http://backend:4000;
+    }
+  }
+}
+```
 
 ## 1.4. Installing Project Dependencies
 
@@ -365,6 +397,7 @@ i. Create network named 'webapp'. We are using this network to run our frontend,
       - If the IP of the MongoDB container changes (e.g., after a restart), you don’t need to modify the connection string because Docker manages the name resolution.
       - Even if the web-mongodb container restarts or the backend service reboots, the hostname remains valid, and no manual changes to the code are required.
 
+
 ii. Next, we are binding port 80 on the host machine to port 3000 on the container that will run for frontend service.
 
    We bind using flag, "-p 80:3000" connecting conainer to "--network webapp"
@@ -377,7 +410,7 @@ iii. Similarly for backend to connect with frontend, we are binding port 5000 on
       
    ```javascript
       
-   //backend.server.js
+   //backend/server.js
    
    // PORT
    const port = process.env.PORT || 4000;
