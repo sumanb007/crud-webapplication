@@ -247,7 +247,7 @@ Below is what we see in 'backend' directory
    ```
 ### 1.3.3. Setting Nginx Reverse Proxy
 
-Overall Purpose
+Overall Purpose:
 This config sets up NGINX as a reverse proxy to:
 
 - Route traffic to a frontend app (running on port 8080)
@@ -397,14 +397,16 @@ i. Create network named 'webapp'. We are using this network to run our frontend,
       - If the IP of the MongoDB container changes (e.g., after a restart), you don’t need to modify the connection string because Docker manages the name resolution.
       - Even if the web-mongodb container restarts or the backend service reboots, the hostname remains valid, and no manual changes to the code are required.
 
+ii. For reverse proxy we will deploy container with "--network webapp"
 
-ii. Next, we are binding port 80 on the host machine to port 3000 on the container that will run for frontend service.
+iii. Next, we are defining multistage for the frontend container. And, we are using nginx as final build which then will configure custom port 8080 in container.
+     Then, we are binding port 80 on the host machine to port 8080 on the container that will run for frontend service.
+   
+   We bind using flag, "-p 80:8080" connecting conainer to "--network webapp"
 
-   We bind using flag, "-p 80:3000" connecting conainer to "--network webapp"
 
-
-iii. Similarly for backend to connect with frontend, we are binding port 5000 on the host machine to port 4000 on container.
-      This is because we have configured frontend to connect with port 5000 on backend.
+iii. Likewise, for backend to connect with proxy, we are simply deploying container with '--network webapp' and default port 4000 on container.
+      This is because we have configured nginx to connect with port 4000 on backend.
       And backend server.js listens at port 4000.
       <img width="836" alt="endpoints" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/endpoints.png">
       
@@ -419,7 +421,7 @@ iii. Similarly for backend to connect with frontend, we are binding port 5000 on
    });
    ```
 
-iv. Finally, like for frontend and backend, we also connect mongodb to network 'webapp'. And we are naming the container 'web-mongodb' because backend/database/db.js connects to mongodb with that name.
+iv. Finally, similar to reverse proxy, frontend and backend containers, we also connect mongodb to network 'webapp'. And we are naming the container 'web-mongodb' because backend/database/db.js connects to mongodb with that name.
 
    ```javascript
    //backend/database/db.js
@@ -460,18 +462,44 @@ i. First, let's create .dockerignore file in both frontend and backend directori
 ii. In frontend directory, create a file 'Dockerfile' and copy from below.
 
    ```bash
-   cd frontend
-   vim Dockerfile
+   vim crud-webapplication/frontend/Dockerfile
    ```
 
    ```text
-   # Frontend Dockerfile
-   FROM 	node:latest
-   WORKDIR	/app
-   COPY	. .
-   RUN	npm i react-bootstrap@next bootstrap@5.1.0 react-router-dom axios formik yup
-   EXPOSE	3000
-   CMD	npm start
+   # Stage 1: Build the React app
+   FROM node:16-alpine AS builder
+   WORKDIR /frontend
+   COPY package*.json ./
+   RUN npm ci --silent
+   COPY . .
+   RUN npm run build  # Assumes "build" script exists in package.json
+   
+   # Stage 2: Serve with NGINX
+   FROM nginx:alpine
+   COPY --from=builder /frontend/build /usr/share/nginx/html
+   # Custom NGINX config for port 8080 and React routing
+   COPY nginx-frontend.conf /etc/nginx/conf.d/default.conf
+   # Explicitly expose port 8080 (optional but good practice)
+   EXPOSE 8080
+   ```
+
+   And, for custom nginx port we mount 'nginx-frontend.conf' file
+
+   ```nginx
+   server {
+    listen 8080;  # Frontend customized to listens on port 8080
+    server_name localhost;
+    root /usr/share/nginx/html;
+
+    location / {
+        try_files $uri $uri/ /index.html;  # Critical for React routing
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+   }
    ```
 
 iii. Similarly in backend directory, create a file 'Dockerfile' and copy from below.
@@ -482,12 +510,18 @@ iii. Similarly in backend directory, create a file 'Dockerfile' and copy from be
    ```
 
    ```text
-   # Backend Dockerfile
-   FROM	node:latest
-   WORKDIR	/backend
-   COPY 	. .
-   RUN	npm i express body-parser cors mongoose nodemon dotenv
-   CMD	npm start
+   # Stage 1: Install dependencies
+   FROM node:16-alpine AS dependencies
+   WORKDIR /backend
+   COPY package*.json ./
+   RUN npm ci --only=production --silent
+   
+   # Stage 2: Copy only production files
+   FROM node:16-alpine
+   WORKDIR /backend
+   COPY --from=dependencies /backend/node_modules ./node_modules
+   COPY . .
+   CMD ["npm", "start"]
    ```
 
 ## 2.3. Setting up Docker Compose  
@@ -497,33 +531,71 @@ Now, create a docker-compose file in the main directory of 'crud-webapplication'
    vim ~/crud-webapplication/docker-compose
    ```
    ```yaml
-   # ~/crud-webapplication/docker-compose
    version: "3.9"
 
    networks:
      webapp:
+       name: webapp
+       driver: bridge
+   
    services:
+     # Frontend Service (React)
      frontend:
+       image: 192.168.1.110:5050/frontend-crud-webapp:v2
        container_name: frontend
-       build: ./frontend
-       ports:
-         - 80:3000
+       hostname: frontend
        networks:
          - webapp
+       # Commenting below line to let NGINX handle traffic
+       # ports: "80:3000" 
+   
+     # Backend Service (Node Express Js)
      backend:
+       image: 192.168.1.110:5050/backend-crud-webapp:v1
        container_name: backend
-       build: ./backend
-       ports:
-         - 5000:4000
+       hostname: backend
+       
+       # commenting below line to let backend work in its port 4000
+       # ports: "5000:4000"  # Expose backend on host port 5000
+   
        networks:
          - webapp
        depends_on:
-         - mongodb
-     mongodb:
+         - web-mongodb
+   
+     # MongoDB Service
+     web-mongodb:
+       image: mongo:4.0-rc-xenial
        container_name: web-mongodb
-       image: mongo
+       hostname: web-mongodb
+       volumes:
+         - mongodb_data:/data/db    #Maps to NFS
        networks:
          - webapp
+   
+     # NGINX Reverse Proxy
+     nginx:
+       image: nginx:alpine
+       container_name: nginx-proxy
+       hostname: nginx-proxy
+       networks:
+         - webapp
+       ports:
+         - "0.0.0.0:80:80"  # External access point
+       volumes:
+         - ./nginx.conf:/etc/nginx/nginx.conf
+       depends_on:
+         - frontend
+         - backend
+   
+   volumes:
+     mongodb_data:
+       name: mongodb_data
+       driver: local
+       driver_opts:
+         type: nfs
+         o: addr=192.168.1.110,rw,soft,timeo=30
+         device: ":/mnt/sdb2-partition/mongo-NFS-server"  # NFS server path
    ```
 ---
 
