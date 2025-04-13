@@ -543,25 +543,12 @@ docker build -t backend-crud-webapp . --no-cache
 Tag the image and push them to repository
 ```bash
 #frontend
-docker tag frontend-crud-webapp:latest 192.168.1.110:5050/frontend-crud-webapp:test
+docker tag frontend-crud-webapp:latest 192.168.1.110:5050/frontend-crud-webapp:minmal
+docker push 192.168.1.110:5050/frontend-crud-webapp:minimal
 
 #backend
-docker tag backend-crud-webapp:latest 192.168.1.110:5050/backend-crud-webapp:test
-1
-1
-
-1
-1
-1
-1
-
-1
-1
-1
-1
-1
-1
-
+docker tag frontend-crud-webapp:latest 192.168.1.110:5050/frontend-crud-webapp:minimal
+docker push 192.168.1.110:5050/frontend-crud-webapp:minimal
 ```
 
 
