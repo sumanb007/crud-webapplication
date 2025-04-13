@@ -59,10 +59,10 @@ Led the containerization, code optimization, and repository management processes
    1.4 [Installing Project Dependencies](#14-installing-project-dependencies)
 
 2. [Dockerizing the Application](#2-dockerizing-the-application)  
-   2.1 [Configuring Docker Network](#21-configuring-docker-network)  
-   2.2 [Creating Dockerfiles](#22-creating-dockerfiles)
-   2.3 [Building Images](#23-building-images)
-   2.4 [Setting up Docker Compose](#23-setting-up-docker-compose)  
+    2.1 [Configuring Docker Network](#21-configuring-docker-network)  
+    2.2 [Creating Dockerfiles](#22-creating-dockerfiles)  
+    2.3 [Building Images](#23-building-images)  
+    2.4 [Setting up Docker Compose](#24-setting-up-docker-compose)
 
 3. [Building and Running Containers](#3-building-and-running-containers)  
    3.1 [Running Containers](#31-running-containers)  
@@ -466,7 +466,21 @@ ii. In frontend directory, create a file 'Dockerfile' and copy from below.
    ```
 
    ```text
-   c
+   # Stage 1: Build the React app
+   FROM node:16-alpine AS builder
+   WORKDIR /frontend
+   COPY package*.json ./
+   RUN npm ci --silent
+   COPY . .
+   RUN npm run build  # Assumes "build" script exists in package.json
+ 
+   # Stage 2: Serve with NGINX
+   FROM nginx:alpine
+   COPY --from=builder /frontend/build /usr/share/nginx/html
+   # Custom NGINX config for port 8080 and React routing
+   COPY nginx-frontend.conf /etc/nginx/conf.d/default.conf
+   # Explicitly expose port 8080 (optional but good practice)
+   EXPOSE 8080
    ```
 
    And, for custom nginx port we copy 'nginx-frontend.conf' file as a volume to /etc/nginx/conf.d/default.conf in container.
@@ -547,6 +561,8 @@ docker tag backend-crud-webapp:latest 192.168.1.110:5050/backend-crud-webapp:tes
 1
 1
 1
+
+```
 
 
 ## 2.4. Setting up Docker Compose  
