@@ -57,6 +57,7 @@ Led the containerization, code optimization, and repository management processes
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3.2 [Setting Backend](#132-setting-backend)  
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3.3 [Setting Nginx Reverse Proxy](#133-setting-nginx-reverse-proxy)  
    1.4 [Installing Project Dependencies](#14-installing-project-dependencies)
+   1.5 [Setting Remote NFS for Persistent Storage](#15-setting-remote-nfs-for-persistent-storage)
 
 2. [Dockerizing the Application](#2-dockerizing-the-application)  
     2.1 [Configuring Docker Network](#21-configuring-docker-network)  
@@ -369,6 +370,24 @@ iv. Check the installed backend dependencies in package.json
      }
    }
    ```
+
+## 1.5. Setting Remote NFS for Persistent Storage
+|
+|
+|
+|
+|
+|
+|
+|      Updating in few days.
+|
+|
+|
+|
+|
+|
+
+
 ---
 
 ## 2. Dockerizing the Application
