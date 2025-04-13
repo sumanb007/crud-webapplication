@@ -526,7 +526,7 @@ iii. Similarly in backend directory, create a file 'Dockerfile' and copy from be
 
 ## 2.3. Building Images
 
-Click the [link](https://github.com/sumanb007/docker/blob/main/README.md) to view the detailed documentation in building images and pushing it to private repository.
+Click the [link](https://github.com/sumanb007/docker/blob/main/README.md) to view my detailed documentation in building images and pushing it to private repository.
 
 For now, let's use Dockerfile to create image
 
