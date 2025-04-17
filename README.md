@@ -56,7 +56,7 @@ Led the containerization, code optimization, and repository management processes
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3.1 [Setting Frontend](#131-setting-frontend)  
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3.2 [Setting Backend](#132-setting-backend)  
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3.3 [Setting Nginx Reverse Proxy](#133-setting-nginx-reverse-proxy)  
-   1.4 [Installing Project Dependencies](#14-installing-project-dependencies)
+   1.4 [Installing Project Dependencies](#14-installing-project-dependencies)  
    1.5 [Setting Remote NFS for Persistent Storage](#15-setting-remote-nfs-for-persistent-storage)
 
 2. [Dockerizing the Application](#2-dockerizing-the-application)  
@@ -372,21 +372,38 @@ iv. Check the installed backend dependencies in package.json
    ```
 
 ## 1.5. Setting Remote NFS for Persistent Storage
-|
-|
-|
-|
-|
-|
-|
-|      Updating in few days.
-|
-|
-|
-|
-|
-|
 
+Here in the [link](https://github.com/sumanb007/Labs/blob/main/NFS%20setup.md) is detailed NFS setup for this project. 
+
+Below ensures proper NFS sharing between:
+
+- NFS Server: 192.168.1.110 (hosting /mnt/sdb2-partition/mongo-NFS-server)
+- Clients:
+  - Docker Host (masternode.k8s.com: 192.168.1.11)
+
+### 1. Install nfs-common on Client
+
+Run on Docker host (masternode):
+```bash
+sudo apt update && sudo apt install nfs-common -y
+```
+
+### 2. check remote nfs share 
+```bash
+showmount -e 192.168.1.110 #server ip
+```
+
+### 3. Add to docker-compose.yaml as:
+```yaml
+volumes:
+  mongodb_data:
+    name: mongodb_data
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.110,rw,soft,timeo=30
+      device: ":/mnt/sdb2-partition/mongo-NFS-server"  # NFS server path
+```
 
 ---
 
@@ -545,7 +562,7 @@ iii. Similarly in backend directory, create a file 'Dockerfile' and copy from be
 
 ## 2.3. Building Images
 
-Click the [link](https://github.com/sumanb007/docker/blob/main/README.md) to view my detailed documentation in building images and pushing it to private repository.
+Click the [link](https://github.com/sumanb007/docker/blob/main/README.md) to view my detailed documentation on these building images and pushing it to private repository.
 
 For now, let's use Dockerfile to create image
 
@@ -649,36 +666,67 @@ Now, create a docker-compose file in the main directory of 'crud-webapplication'
 ## 3. Building and Running Containers
 ## 3.1. Running Containers
 
-i. Using Dockerfile, lets start by build container images first.
-
-   - For Frontend:
-      ```bash
-      cd ~/crud-webapplication/frontend
-      docker build -t web-front .
-      ```
-   - For backend
-      ```bash
-      cd ~/crud-webapplication/backend
-      docker build -t web-back .
-      ```
-
-ii. Then, build frontend container
+i. let's, build frontend container
    ```bash
-    docker run -itd --name frontend --network webapp -p 80:3000 web-front
+    docker run -itd --name frontend --network webapp frontend-crud-webapp
    ```
 
-iii. Next, before we containerize backend let's containerize mongodb.
+
+ii. Next, before we containerize backend let's containerize mongodb.
+
+   But, first we create volume that uses remote nfs share:
    ```bash
-   docker run -itd --name web-mongodb --network webapp -p 27017 mongo
+   docker volume create \
+   --driver local \
+   --opt type=nfs \
+   --opt o=addr=192.168.1.110,rw,soft,timeo=30 \
+   --opt device=:/mnt/sdb2-partition/mongo-NFS-server/docker \
+   mongodb_data
    ```
-Although for persistent data storage, containerizing this way is not a good practice. However we are implementing for demonstration.
 
-
-iv. Now, build backed container
+   Verify the Volume
    ```bash
-   docker run -it --name backend --network webapp -p 5000:4000 web-back
+   docker volume inspect mongodb_data
+   ```
+   Expected Output:
+   ```json
+   {
+     "Driver": "local",
+     "Options": {
+       "device": ":/mnt/sdb2-partition/mongo-NFS-server/docker",
+       "o": "addr=192.168.1.110,rw,soft,timeo=30",
+       "type": "nfs"
+     },
+     ...
+   }
+   ```
+   
+   Now we create container:
+   ```bash
+   docker run -itd --name web-mongodb --network -v mongodb_data:/data/db webapp mongo
+   ```
+
+
+iii. Now, build backed container
+   ```bash
+   docker run -it --name backend --network webapp backend-crud-webapp
    ```
    Let's not detach the terminal '-itd', because we are trying to observe what is being logged and see how the application interacts with MongoDB.
+   
+iv. Then, we containerize nginx reverse proxy
+- 
+-
+-
+-
+- will be updated in few days
+- 
+-
+-
+-
+-
+-
+
+
 
 Here's the docker images.
 
