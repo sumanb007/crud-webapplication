@@ -63,12 +63,12 @@ Led the containerization, code optimization, and repository management processes
     2.1 [Configuring Docker Network](#21-configuring-docker-network)  
     2.2 [Creating Dockerfiles](#22-creating-dockerfiles)  
     2.3 [Building Images](#23-building-images)  
-    2.4 [Setting up Docker Compose](#24-setting-up-docker-compose)
 
-3. [Building and Running Containers](#3-building-and-running-containers)  
-   3.1 [Running Containers](#31-running-containers)  
-   3.2 [Verifying Application](#32-verifying-application)  
-   3.3 [Publishing Image to Docker Hub](#33-publishing-image-to-docker-hub)  
+3. [Running and Verifying Containers](#3-running-and-verifying-containers)  
+    3.1 [Running Containers](#31-running-containers)  
+    3.2 [Setting up Docker Compose](#32-setting-up-docker-compose)  
+    3.3 [Verifying Application](#33-verifying-application)  
+    3.4 [Publishing Image to Docker Hub](#34-publishing-image-to-docker-hub)
 
 4. [Code Optimization](#4-code-optimization)  
    4.1 [Improving Frontend Queries](#41-improving-frontend-queries)  
@@ -587,9 +587,74 @@ docker tag frontend-crud-webapp:latest 192.168.1.110:5050/frontend-crud-webapp:m
 docker push 192.168.1.110:5050/frontend-crud-webapp:minimal
 ```
 
+---
 
-## 2.4. Setting up Docker Compose  
-Now, create a docker-compose file in the main directory of 'crud-webapplication'
+## 3. Running and verifying Containers
+## 3.1. Running Containers
+
+### Dependency Order : frontend --> web-mongodb --> backend --> nginx-proxy
+
+i. let's, build frontend container
+   ```bash
+    docker run -itd --name frontend --network webapp 192.168.1.110:5050/frontend-crud-webapp:minimal
+   ```
+
+
+ii. Next, before we containerize backend let's containerize mongodb.
+
+   But, first we create volume that uses remote nfs share:
+   ```bash
+   docker volume create \
+   --driver local \
+   --opt type=nfs \
+   --opt o=addr=192.168.1.110,rw,soft,timeo=30 \
+   --opt device=:/mnt/sdb2-partition/mongo-NFS-server/docker \
+   mongodb_data
+   ```
+
+   Verify the Volume
+   ```bash
+   docker volume inspect mongodb_data
+   ```
+   Expected Output:
+   ```json
+   {
+     "Driver": "local",
+     "Options": {
+       "device": ":/mnt/sdb2-partition/mongo-NFS-server/docker",
+       "o": "addr=192.168.1.110,rw,soft,timeo=30",
+       "type": "nfs"
+     },
+     ...
+   }
+   ```
+   
+   Now we create container:
+   ```bash
+   docker run -itd --name web-mongodb --network webapp -v mongodb_data:/data/db  mongo
+   ```
+
+
+iii. Now, build backed container
+   ```bash
+   docker run -it --name backend --network webapp 192.168.1.110:5050/backend-crud-webapp:minimal
+   ```
+   Let's not detach the terminal '-itd', because we are trying to observe what is being logged and see how the application interacts with MongoDB.
+   
+iv. Then, we containerize nginx reverse proxy
+   ```bash
+   docker run -d \
+   --name nginx-proxy \
+   --network webapp \
+   -p 80:80 \  # Bind host port 80 to container port 80
+   -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf \  # Mount your `nginx.conf`
+   nginx:alpine
+   ```
+
+## 3.2. Setting up Docker Compose
+
+Now, To simplify management, we'll define everything in a docker-compose.
+Let's create a docker-compose.yaml file in the main directory of 'crud-webapplication'
 
    ```bash
    vim ~/crud-webapplication/docker-compose
@@ -605,7 +670,7 @@ Now, create a docker-compose file in the main directory of 'crud-webapplication'
    services:
      # Frontend Service (React)
      frontend:
-       image: 192.168.1.110:5050/frontend-crud-webapp:v2
+       image: 192.168.1.110:5050/frontend-crud-webapp:minimal
        container_name: frontend
        hostname: frontend
        networks:
@@ -615,7 +680,7 @@ Now, create a docker-compose file in the main directory of 'crud-webapplication'
    
      # Backend Service (Node Express Js)
      backend:
-       image: 192.168.1.110:5050/backend-crud-webapp:v1
+       image: 192.168.1.110:5050/backend-crud-webapp:minimal
        container_name: backend
        hostname: backend
        
@@ -661,72 +726,6 @@ Now, create a docker-compose file in the main directory of 'crud-webapplication'
          o: addr=192.168.1.110,rw,soft,timeo=30
          device: ":/mnt/sdb2-partition/mongo-NFS-server"  # NFS server path
    ```
----
-
-## 3. Building and Running Containers
-## 3.1. Running Containers
-
-i. let's, build frontend container
-   ```bash
-    docker run -itd --name frontend --network webapp frontend-crud-webapp
-   ```
-
-
-ii. Next, before we containerize backend let's containerize mongodb.
-
-   But, first we create volume that uses remote nfs share:
-   ```bash
-   docker volume create \
-   --driver local \
-   --opt type=nfs \
-   --opt o=addr=192.168.1.110,rw,soft,timeo=30 \
-   --opt device=:/mnt/sdb2-partition/mongo-NFS-server/docker \
-   mongodb_data
-   ```
-
-   Verify the Volume
-   ```bash
-   docker volume inspect mongodb_data
-   ```
-   Expected Output:
-   ```json
-   {
-     "Driver": "local",
-     "Options": {
-       "device": ":/mnt/sdb2-partition/mongo-NFS-server/docker",
-       "o": "addr=192.168.1.110,rw,soft,timeo=30",
-       "type": "nfs"
-     },
-     ...
-   }
-   ```
-   
-   Now we create container:
-   ```bash
-   docker run -itd --name web-mongodb --network -v mongodb_data:/data/db webapp mongo
-   ```
-
-
-iii. Now, build backed container
-   ```bash
-   docker run -it --name backend --network webapp backend-crud-webapp
-   ```
-   Let's not detach the terminal '-itd', because we are trying to observe what is being logged and see how the application interacts with MongoDB.
-   
-iv. Then, we containerize nginx reverse proxy
-- 
--
--
--
-- will be updated in few days
-- 
--
--
--
--
--
-
-
 
 Here's the docker images.
 
@@ -777,7 +776,7 @@ v. Now lets test to run containers from docker-compose file.
       bsuman@masternode:~/crud-webapplication$ 
       ```
    
-## 3.2. Verifying Application
+## 3.3. Verifying Application
 
 i. Since the application reachability is forwarded to Router's Network. We are browsing application at IP: 192.168.0.11:80
 <img width="1364" alt="browsingApp" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/browsingApp.png">
@@ -800,7 +799,7 @@ vi. Read the list again.
 <img width="1326" alt="readStudent2" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/readStudent2.png">
 
 
-## 3.3. Publishing Image to Docker Hub
+## 3.4. Publishing Image to Docker Hub
 
 i. Logging to docker registry
    ```bash
