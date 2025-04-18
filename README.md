@@ -631,7 +631,7 @@ ii. Next, before we containerize backend let's containerize mongodb.
    
    Now we create container:
    ```bash
-   docker run -itd --name web-mongodb --network webapp -v mongodb_data:/data/db  mongo
+   docker run -itd --name web-mongodb --network webapp -v mongodb_data:/data/db mongo:4.0-rc-xenial
    ```
 
 
@@ -641,14 +641,19 @@ iii. Now, build backed container
    ```
    Let's not detach the terminal '-itd', because we are trying to observe what is being logged and see how the application interacts with MongoDB.
    
-iv. Then, we containerize nginx reverse proxy
+iv. Then, we containerize nginx reverse proxy.
+
+   Change the directory to where 'nginx.conf exists'. In our case it's in "~/crud-webapplication"
    ```bash
+   cd ~/crud-webapplication
+   
    docker run -d \
    --name nginx-proxy \
    --network webapp \
-   -p 80:80 \  # Bind host port 80 to container port 80
-   -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf \  # Mount your `nginx.conf`
+   -p 80:80 \
+   -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf \
    nginx:alpine
+
    ```
 
 ## 3.2. Setting up Docker Compose
