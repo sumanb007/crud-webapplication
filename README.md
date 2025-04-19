@@ -845,12 +845,8 @@ ii. Optimizing frontend/src/Components/StudentForm.js
      ```javascript
      <FormGroup className="mb-3">
      ```
-     
-iii. URL Endpoint 'localhost:4000' Changed to '192.168.0.11:5000'  in the StudentTableRow.js, create-student.component.js, edit-student.component.js, student-list.component.js
-      <img width="836" alt="endpoints" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/endpoints.png">
 
-
-iv. Optimizing frontend/src/Components/create-student.component.js
+iii. Optimizing frontend/src/Components/create-student.component.js
 
    - Added Formik parameters: resetForm and setSubmitting are now used to improve form handling.
      ```javascript
@@ -865,12 +861,12 @@ iv. Optimizing frontend/src/Components/create-student.component.js
      .finally(() => setSubmitting(false)); // Ensure Formik submission ends
      ```
 
-v. Optimizing frontend/src/Components/edit-student.component.js
+iv. Optimizing frontend/src/Components/edit-student.component.js
 
    Error that occurred in provided code:
-   
-   <img width="495" alt="editIssue" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/editIssue.png">
+   ### -> undefined is not an object (evaluating 'props.match.params'
 
+   
    The error that is encountering (undefined is not an object (evaluating 'props.match.params')) usually occurs when the match object or its params are unavailable in the component.     This happens because React Router version 6 and later changed how route parameters are accessed.
 
 
@@ -886,9 +882,9 @@ v. Optimizing frontend/src/Components/edit-student.component.js
      //Other changes
      const { id } = useParams();  // Extract route parameter (id) //line 13
      
-     axios.put(`http://192.168.0.11:5000/students/update-student/${id}`, studentObject) //line 23,24
+     axios.put(`http://localhost:4000/students/update-student/${id}`, studentObject) //line 23,24
 
-     axios.get(`http://192.168.0.11:5000/students/update-student/${id}`) //line 39
+     axios.get(`http://localhost:4000/students/update-student/${id}`) //line 39
 
 
    - Navigation Handling
