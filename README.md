@@ -68,7 +68,6 @@ Led the containerization, code optimization, and repository management processes
     3.1 [Running Containers](#31-running-containers)  
     3.2 [Setting up Docker Compose](#32-setting-up-docker-compose)  
     3.3 [Verifying Application](#33-verifying-application)  
-    3.4 [Publishing Image to Docker Hub](#34-publishing-image-to-docker-hub)
 
 4. [Code Optimization](#4-code-optimization)  
    4.1 [Improving Frontend Queries](#41-improving-frontend-queries)  
@@ -616,24 +615,13 @@ ii. Next, before we containerize backend let's containerize mongodb.
    ```bash
    docker volume inspect mongodb_data
    ```
-   Expected Output:
-   ```json
-   {
-     "Driver": "local",
-     "Options": {
-       "device": ":/mnt/sdb2-partition/mongo-NFS-server/docker",
-       "o": "addr=192.168.1.110,rw,soft,timeo=30",
-       "type": "nfs"
-     },
-     ...
-   }
-   ```
    
    Now we create container:
    ```bash
    docker run -itd --name web-mongodb --network webapp -v mongodb_data:/data/db mongo:4.0-rc-xenial
    ```
 
+   <img width="800" alt="webmongodb" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/webmongodb.png">
 
 iii. Now, build backed container
    ```bash
@@ -643,7 +631,7 @@ iii. Now, build backed container
    
 iv. Then, we containerize nginx reverse proxy.
 
-   Change the directory to where 'nginx.conf exists'. In our case it's in "~/crud-webapplication"
+   Change the directory to where 'nginx.conf' exists. In our case it's in "~/crud-webapplication"
    ```bash
    cd ~/crud-webapplication
    
@@ -655,7 +643,9 @@ iv. Then, we containerize nginx reverse proxy.
    nginx:alpine
 
    ```
+   <img width="800" alt="nginx-proxy" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/nginx-proxy.png">
 
+   
 ## 3.2. Setting up Docker Compose
 
 Now, To simplify management, we'll define everything in a docker-compose.
@@ -732,53 +722,17 @@ Let's create a docker-compose.yaml file in the main directory of 'crud-webapplic
          device: ":/mnt/sdb2-partition/mongo-NFS-server"  # NFS server path
    ```
 
-Here's the docker images.
+See the logs below when we make changes in application database.
 
-<img width="488" alt="dockerImages" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/dockerImages.png">
-
-See the logs below when you make changes in application database.
 <img width="1364" alt="dbLogs" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/dbLogs.png">
 
-You may refer below to [3.2.](#32-verifying-application) for activity done from browser.
+You may refer below to [3.3.](#33-verifying-application) for activity done from browser.
 
 
-v. Now lets test to run containers from docker-compose file.
-
-   - This will create containers and images all from single file. Which is why, first, lets stop and remove previously created docker containers and images.
-
-      ```bash
-      docker stop $(docker ps -aq)
-      docker rm $(docker ps -aq)
-      docker rmi -f $(docker images -aq)
-      ```
-
-   - Also remove dangling images (unused intermediary layers), unused cache and data.
-      ```bash
-      docker image prune -f
-      docker builder prune -a --force
-      ```
+v. Now let's test to run containers from docker-compose file.
    
-   - Now lets run docker-compose
       ```bash
       docker compose up --build -d
-      ```
-
-     Images and Containers created:
-      ```bash
-      bsuman@masternode:~/crud-webapplication$ docker images
-      REPOSITORY                     TAG       IMAGE ID       CREATED              SIZE
-      crud-webapplication-frontend   latest    847a214e5bb5   About a minute ago   1.47GB
-      crud-webapplication-backend    latest    b5845e2a66fb   5 minutes ago        1.16GB
-      mongo                          latest    77c59b638412   2 days ago           855MB
-      bsuman@masternode:~/crud-webapplication$
-      bsuman@masternode:~/crud-webapplication$ 
-      bsuman@masternode:~/crud-webapplication$ docker ps -a
-      CONTAINER ID   IMAGE                          COMMAND                  CREATED              STATUS              PORTS                                         NAMES
-      845160b507e5   crud-webapplication-backend    "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:5000->4000/tcp, [::]:5000->4000/tcp   backend
-      eb2cdbd3e5d2   mongo                          "docker-entrypoint.s…"   About a minute ago   Up About a minute   27017/tcp                                     web-mongodb
-      48fa4b2eccc3   crud-webapplication-frontend   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:80->3000/tcp, [::]:80->3000/tcp       frontend
-      bsuman@masternode:~/crud-webapplication$ 
-      bsuman@masternode:~/crud-webapplication$ 
       ```
    
 ## 3.3. Verifying Application
@@ -802,28 +756,6 @@ v. Delete student info.
 
 vi. Read the list again.
 <img width="1326" alt="readStudent2" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/readStudent2.png">
-
-
-## 3.4. Publishing Image to Docker Hub
-
-i. Logging to docker registry
-   ```bash
-   docker login -u bsumanji
-   ```
-
-ii. Tagging images
-   ```bash
-   docker tag crud-webapplication-frontend:latest bsumanji/frontend-crud-webappp
-   docker tag crud-webapplication-backend:latest bsumanji/backend-crud-webappp
-   ```
-
-iii. Pushing images
-   ```bash
-   docker push bsumanji/frontend-crud-webappp
-   docker push bsumanji/backend-crud-webappp
-   ```
-<img width="722" alt="pushingImages" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/pushingImages.png">
-
 
 
 ---
