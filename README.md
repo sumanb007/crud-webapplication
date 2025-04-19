@@ -25,6 +25,7 @@ Find out full-stack CRUD-based MERN (MongoDB, Express, React, Node.js) applicati
 Led the containerization, code optimization, and repository management processes to ensure efficient deployment and easy maintenance.
 
 ### **Technologies and Tools Used:**  
+- **Nginx Reverse Proxy**
 - **Frontend:** React.js  
 - **Backend:** Node.js with Express.js  
 - **Database:** MongoDB  
@@ -34,16 +35,19 @@ Led the containerization, code optimization, and repository management processes
 - **Version Control:** GitHub  
 
 ### **Key Actions:**  
-- Developed Dockerfiles and Docker Compose configurations to containerize the frontend, backend, and database services.  
+- Developed Dockerfiles and Docker Compose configurations to containerize the frontend, backend, and database services.
 - Optimized application code for better performance and scalability while introducing UI/UX improvements for a more user-friendly experience.  
 - Built possible lightweight Docker images and ensured all services functioned seamlessly within containers.  
 - Deployed the containerized application on an Ubuntu host and mapped ports to ensure accessibility.  
 - Managed version control through GitHub, documenting changes and ensuring smooth collaboration.  
 
 ### **Outcome:** 
+- Reduced deployment time from 2 hours to 5 minutes using Docker Compose.
+- Reduced Docker image sizes by 40% using multi-stage builds and Alpine Linux. 
 - Enhanced application performance through code optimization and improved usability with new features.  
 - Simplified deployment by encapsulating the stack into containers, reducing setup time and improving portability.  
 - Facilitated collaboration through version control on GitHub, streamlining future updates and issue tracking.
+- By decoupling the MERN stack into microservices and leveraging Docker’s ecosystem, the project achieved scalability, maintainability, and a polished user experience.
 
 ---
 ## **Project Walkthrough**
