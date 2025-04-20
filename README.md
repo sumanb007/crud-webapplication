@@ -43,7 +43,7 @@ Led the containerization, code optimization, and repository management processes
 
 ### **Outcome:** 
 - Reduced deployment time from 2 hours to 5 minutes using Docker Compose.
-- Reduced Docker image sizes by 40% using multi-stage builds and Alpine Linux. 
+- Reduced Docker image sizes by 90% using multi-stage builds and Alpine Linux. 
 - Enhanced application performance through code optimization and improved usability with new features.  
 - Simplified deployment by encapsulating the stack into containers, reducing setup time and improving portability.  
 - Facilitated collaboration through version control on GitHub, streamlining future updates and issue tracking.
@@ -629,9 +629,8 @@ ii. Next, before we containerize backend let's containerize mongodb.
 
 iii. Now, build backed container
    ```bash
-   docker run -it --name backend --network webapp 192.168.1.110:5050/backend-crud-webapp:minimal
+   docker run -itd --name backend --network webapp 192.168.1.110:5050/backend-crud-webapp:minimal
    ```
-   Let's not detach the terminal '-itd', because we are trying to observe what is being logged and see how the application interacts with MongoDB.
    
 iv. Then, we containerize nginx reverse proxy.
 
@@ -656,11 +655,9 @@ Now, To simplify management, we'll define everything in a docker-compose.
 Let's create a docker-compose.yaml file in the main directory of 'crud-webapplication'
 
    ```bash
-   vim ~/crud-webapplication/docker-compose
+   vim ~/crud-webapplication/docker-compose.yaml
    ```
    ```yaml
-   version: "3.9"
-
    networks:
      webapp:
        name: webapp
@@ -726,9 +723,6 @@ Let's create a docker-compose.yaml file in the main directory of 'crud-webapplic
          device: ":/mnt/sdb2-partition/mongo-NFS-server"  # NFS server path
    ```
 
-See the logs below when we make changes in application database.
-
-<img width="1364" alt="dbLogs" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/dbLogs.png">
 
 You may refer below to [3.3.](#33-verifying-application) for activity done from browser.
 
@@ -741,7 +735,7 @@ v. Now let's test to run containers from docker-compose file.
    
 ## 3.3. Verifying Application
 
-i. Since the application reachability is forwarded to Router's Network. We are browsing application at IP: 192.168.0.11:80
+i. Since the application reachability is forwarded to Router's Network. We are browsing application at  http://192.168.1.11:80
 <img width="1364" alt="browsingApp" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/browsingApp.png">
 
 ii. Create student info by filling form.
@@ -934,7 +928,7 @@ i. Optimized in backend/routes/server.js
 
    - Recommended Database COnnection Logic
 
-     Issue in connection with mongodb
+     Issue in connection with mongodb, while testing.
      
      <img width="876" alt="mongooseConnect" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/mongooseConnect.png">
       
