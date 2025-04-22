@@ -732,28 +732,25 @@ v. Now let's test to run containers from docker-compose file.
       ```bash
       docker compose up --build -d
       ```
+   <img width="800" alt="docker-compose" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/docker-compose.png">
+
    
 ## 3.3. Verifying Application
 
-i. Since the application reachability is forwarded to Router's Network. We are browsing application at  http://192.168.1.11:80
+i. Since the application reachability is forwarded to Router's Network, Let's are browsing application at  http://192.168.1.11:80
+
+We see the data entries that we have done using 'curl' in the above section after creating containers using docker compose.
+
 <img width="1364" alt="browsingApp" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/browsingApp.png">
 
-ii. Create student info by filling form.
-<img width="1311" alt="createStudent" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/createStudent.png">
-
-<img width="1324" alt="createStudent2" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/createStudent2.png">
-
-iii. Read the student list.
-<img width="1324" alt="readStudent1" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/readStudent1.png">
-
-iv. Update the student info.
+ii. Update the student info.
 <img width="1324" alt="updateStudent" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/updateStudent.png">
 
-v. Delete student info.
+iii. Delete student info.
 <img width="1297" alt="deleteStudent" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/deleteStudent.png">
 
-vi. Read the list again.
-<img width="1326" alt="readStudent2" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/readStudent2.png">
+iv. Read the list again.
+<img width="1326" alt="readStudent2" src="https://raw.githubusercontent.com/sumanb007/crud-webapplication/main/img/readStudent.png">
 
 
 ---
