@@ -1,5 +1,3 @@
-version: "3.9"
-
 networks:
   webapp:
     name: webapp
@@ -8,7 +6,7 @@ networks:
 services:
   # Frontend Service (React)
   frontend:
-    image: 192.168.1.110:5050/frontend-crud-webapp:v2
+    image: 192.168.1.110:5050/frontend-crud-webapp:minimal
     container_name: frontend
     hostname: frontend
     networks:
@@ -18,10 +16,9 @@ services:
 
   # Backend Service (Node Express Js)
   backend:
-    image: 192.168.1.110:5050/backend-crud-webapp:v1
+    image: 192.168.1.110:5050/backend-crud-webapp:minimal
     container_name: backend
     hostname: backend
-    
     # commenting below line to let backend work in its port 4000
     # ports: "5000:4000"  # Expose backend on host port 5000
 
